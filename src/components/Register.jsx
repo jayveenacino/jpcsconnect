@@ -3,6 +3,8 @@ import "../css/register.css";
 import { auth, provider } from "../firebase";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import gLogo from "../assets/Glogo.png";
+
 
 export default function Register() {
     const navigate = useNavigate();
@@ -37,7 +39,7 @@ export default function Register() {
         const container = document.getElementById("bg-squares");
         if (!container) return;
 
-        container.innerHTML = ""; 
+        container.innerHTML = "";
         for (let i = 0; i < 20; i++) {
             const s = document.createElement("div");
             s.classList.add("float-square");
@@ -68,7 +70,7 @@ export default function Register() {
                 </p>
 
                 <button className="google-button" onClick={handleGoogleLogin}>
-                    <img className="logo" src="/src/assets/Glogo.png" alt="" />
+                    <img className="logo" src={gLogo} alt="Google" />
                     Continue with Google
                 </button>
 
