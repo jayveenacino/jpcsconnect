@@ -1,0 +1,270 @@
+#register-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f7f7f7;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+#bg-squares {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.header,
+.subheader,
+.card,
+.footer-links {
+    position: relative;
+    z-index: 10;
+}
+
+.header {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #333333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.header .um {
+    color: #a900f7;
+}
+
+.subheader {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: -10px;
+    max-width: 350px;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.welcome-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.signin-instruction {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+.google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #a900f7;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.google-button:hover {
+    background-color: #9708da;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.google-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+}
+
+.privacy-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 22px;
+    line-height: 1.5;
+}
+
+.privacy-text a {
+    color: #333333;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.privacy-text a:hover {
+    color: #333333;
+}
+
+.footer-links {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.footer-links .contact-support {
+    color: #a900f7;
+    text-decoration: none;
+}
+
+.footer-links .contact-support:hover {
+    color: #9708da;
+    text-decoration: underline;
+}
+
+.logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.float-square {
+    position: absolute;
+    bottom: -60px;
+    background: rgba(14, 11, 11, 0.15);
+    backdrop-filter: blur(2px);
+    animation: floatUp linear infinite;
+    border-radius: 4px;
+    z-index: 0;
+}
+
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-120vh);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 480px) {
+
+    #register-container {
+        padding: 10px;
+    }
+
+    .header {
+        font-size: 1.8rem;
+    }
+
+    .subheader {
+        font-size: 0.9rem;
+        max-width: 260px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        width: 100%;
+        padding: 25px 18px;
+        border-radius: 10px;
+    }
+
+    .welcome-title {
+        font-size: 1.3rem;
+    }
+
+    .signin-instruction {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .google-button {
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+
+    .logo {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+    }
+
+    .footer-links {
+        font-size: 0.8rem;
+        margin-top: 20px;
+    }
+}
+
+
+@media (min-width: 481px) and (max-width: 1024px) {
+
+    #register-container {
+        padding: 40px 25px;
+    }
+
+    .header {
+        font-size: 2.4rem;
+    }
+
+    .subheader {
+        font-size: 1rem;
+        max-width: 300px;
+    }
+
+    .card {
+        max-width: 440px;
+        padding: 35px 28px;
+    }
+
+    .welcome-title {
+        font-size: 1.5rem;
+    }
+
+    .signin-instruction {
+        font-size: 1rem;
+    }
+
+    .google-button {
+        font-size: 1rem;
+        padding: 14px;
+    }
+
+    .footer-links {
+        margin-top: 25px;
+        font-size: 0.9rem;
+    }
+}
+
+
+@media (max-width: 768px) {
+    #register-container {
+        padding: 25px 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .header {
+        font-size: 3rem;
+    }
+    .card {
+        max-width: 460px;
+    }
+}
+

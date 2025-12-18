@@ -1,0 +1,156 @@
+.umattend-viewprofile-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: -10px 0;
+}
+
+.umattend-viewprofile-card {
+    width: 100%;
+    max-width: 600px;
+    background: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+}
+
+.umattend-viewprofile-header {
+    text-align: center;
+}
+
+.umattend-viewprofile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #7fa94b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    margin: 0 auto 10px;
+}
+
+.umattend-viewprofile-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.umattend-viewprofile-name {
+    font-weight: 700;
+    font-size: 16px;
+    word-break: break-word;
+}
+
+.umattend-viewprofile-sub {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.umattend-viewprofile-settings {
+    margin-top: 10px;
+    background: #f1f1f1;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.umattend-viewprofile-attended {
+    margin: 16px 0;
+    background: #fffdfd;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #d8d8d8;
+    text-align: center;
+}
+
+.umattend-viewprofile-attended .count {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.umattend-viewprofile-attended .label {
+    font-size: 11px;
+    color: #777;
+}
+
+
+/* QR */
+
+.umattend-viewprofile-qrbox {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.umattend-viewprofile-qr {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 10px;
+}
+
+.umattend-viewprofile-qrtext {
+    font-size: 12px;
+    margin-top: 60px;
+    margin-right: 20px;
+}
+
+.umattend-viewprofile-warning {
+    background: #fff4c2;
+    padding: 6px;
+    font-size: 11px;
+    margin-top: 6px;
+}
+
+
+/* INFO */
+
+.umattend-viewprofile-info {
+    margin-top: 16px;
+}
+
+.umattend-viewprofile-info-item {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    margin-bottom: 8px;
+}
+
+.umattend-viewprofile-info-item label {
+    display: block;
+    font-size: 11px;
+    color: #777;
+}
+
+.umattend-viewprofile-info-item span {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.qrpanel {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+}
+
+.umattend-viewprofile-info-item label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #777;
+}
+
+.umattend-viewprofile-info-icon {
+    font-size: 14px;
+    color: #0e0e0e;
+}
