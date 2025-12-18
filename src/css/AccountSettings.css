@@ -1,0 +1,266 @@
+.umattend-account-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.umattend-account-card {
+    width: 100%;
+    max-width: 600px;
+    background: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+}
+
+
+/* HEADER */
+
+.umattend-account-header {
+    text-align: center;
+}
+
+.umattend-account-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #9708da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    margin: 0 auto 10px;
+}
+
+.umattend-account-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.umattend-account-name {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.umattend-account-sub {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+
+
+/* INFO */
+
+.umattend-account-info {
+    margin-top: 20px;
+}
+
+.umattend-account-info-item {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.umattend-account-info-item label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #777;
+    margin-bottom: 4px;
+}
+
+.umattend-account-info-item span {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.umattend-account-icon {
+    font-size: 14px;
+    color: #0e0e0e;
+}
+
+
+/* ACTION BUTTON */
+
+.umattend-account-action {
+    margin-top: 6px;
+    background: #f1f1f1;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.umattend-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.umattend-modal {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: umattend-modal-fade 0.2s ease;
+}
+
+.umattend-modal h3 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.umattend-modal p {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.umattend-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f6f6f6;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.umattend-toggle-row span {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.umattend-toggle-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.umattend-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.umattend-modal-actions button {
+    background: #9708da;
+    border: none;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.umattend-modal-actions button:hover {
+    opacity: 0.9;
+}
+
+@keyframes umattend-modal-fade {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+/* ORG CHART WRAPPER */
+
+.umattend-org-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    margin: 30px 0;
+}
+
+
+/* LEVEL */
+
+.umattend-org-level {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+/* ROW (BOTTOM) */
+
+.umattend-org-row {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+
+
+/* NODE */
+
+.umattend-org-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 160px;
+}
+
+
+/* AVATAR */
+
+.umattend-org-node img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #d1d5db;
+    margin-bottom: 8px;
+}
+
+
+/* ROLE */
+
+.umattend-org-node strong {
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #374151;
+    text-transform: uppercase;
+}
+
+
+/* NAME */
+
+.umattend-org-node span {
+    font-size: 13px;
+    color: #111827;
+    margin-top: 2px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    .umattend-org-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

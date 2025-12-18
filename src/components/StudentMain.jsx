@@ -4,12 +4,14 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import ViewProfile from "./ViewProfile";
+import AccountSettings from "./AccountSettings";
 
 export default function StudentMain() {
     const [open, setOpen] = useState(false);
     const [photo, setPhoto] = useState("");
     const [name, setName] = useState("");
     const [showProfile, setShowProfile] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
 
     const navigate = useNavigate();
 
@@ -20,10 +22,8 @@ export default function StudentMain() {
             } else {
                 setPhoto(user.photoURL || "");
                 setName(user.displayName || "");
-                console.log("PHOTO URL:", user.photoURL); // debug
             }
         });
-
         return () => unsubscribe();
     }, [navigate]);
 
@@ -35,18 +35,19 @@ export default function StudentMain() {
 
     return (
         <div className="umattend-student-page">
-            {/* NAVBAR */}
             <header className="umattend-student-navbar">
                 <div className="umattend-student-left">
                     <span className="umattend-student-menu">☰</span>
                     <span
                         className="umattend-student-logo"
-                        onClick={() => setShowProfile(false)}
+                        onClick={() => {
+                            setShowProfile(false);
+                            setShowSettings(false);
+                        }}
                         style={{ cursor: "pointer" }}
                     >
                         <span className="umattend-student-logo-highlight">JPCS</span>Connect
                     </span>
-
                 </div>
 
                 <div className="umattend-student-profile-wrap">
@@ -79,7 +80,6 @@ export default function StudentMain() {
                                         <span>{name ? name.charAt(0).toUpperCase() : "U"}</span>
                                     )}
                                 </div>
-
                                 <div className="umattend-student-user-name">
                                     {name || "User"}
                                 </div>
@@ -89,13 +89,21 @@ export default function StudentMain() {
                                 className="umattend-student-dropdown-item"
                                 onClick={() => {
                                     setShowProfile(true);
+                                    setShowSettings(false);
                                     setOpen(false);
                                 }}
                             >
                                 View Profile
                             </div>
 
-                            <div className="umattend-student-dropdown-item">
+                            <div
+                                className="umattend-student-dropdown-item"
+                                onClick={() => {
+                                    setShowSettings(true);
+                                    setShowProfile(false);
+                                    setOpen(false);
+                                }}
+                            >
                                 Account Settings
                             </div>
 
@@ -110,19 +118,26 @@ export default function StudentMain() {
                 </div>
             </header>
 
-            {/* CONTENT */}
             <section className="umattend-student-content">
-                {showProfile ? (
+                {showProfile && (
                     <ViewProfile
                         name={name}
                         email={auth.currentUser?.email}
                         photo={photo}
-                        onBack={() => setShowProfile(false)}
                     />
-                ) : (
+                )}
+
+                {showSettings && (
+                    <AccountSettings
+                        name={name}
+                        email={auth.currentUser?.email}
+                        photo={photo}
+                    />
+                )}
+
+                {!showProfile && !showSettings && (
                     <>
                         <h2 className="umattend-student-title">Events</h2>
-
                         <div className="umattend-student-empty">
                             <div className="umattend-student-calendar">📅</div>
                             <h3>No Upcoming Events</h3>
