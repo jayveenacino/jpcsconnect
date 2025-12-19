@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../css/studentMain.css";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import ViewProfile from "./ViewProfile";
 import AccountSettings from "./AccountSettings";
+import { FaCalendarAlt } from "react-icons/fa";
+
 
 export default function StudentMain() {
     const [open, setOpen] = useState(false);
@@ -12,6 +14,8 @@ export default function StudentMain() {
     const [name, setName] = useState("");
     const [showProfile, setShowProfile] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const dropdownRef = useRef(null);
+
 
     const navigate = useNavigate();
 
@@ -26,6 +30,21 @@ export default function StudentMain() {
         });
         return () => unsubscribe();
     }, [navigate]);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
 
     const handleLogout = async () => {
         await signOut(auth);
@@ -46,11 +65,13 @@ export default function StudentMain() {
                         }}
                         style={{ cursor: "pointer" }}
                     >
-                        <span className="umattend-student-logo-highlight">JPCS</span>Connect
+                        <div className="header" style={{ fontSize: "18px", marginTop: "10px" }}>
+                            <span className="um">JPCS</span>Connect
+                        </div>
                     </span>
                 </div>
 
-                <div className="umattend-student-profile-wrap">
+                <div className="umattend-student-profile-wrap" ref={dropdownRef}>
                     <div
                         className="umattend-student-avatar"
                         onClick={() => setOpen(!open)}
@@ -77,7 +98,7 @@ export default function StudentMain() {
                                             className="umattend-student-avatar-img"
                                         />
                                     ) : (
-                                        <span>{name ? name.charAt(0).toUpperCase() : "U"}</span>
+                                        <span>{name ? name.charAt(0).toUpperCase() : "J"}</span>
                                     )}
                                 </div>
                                 <div className="umattend-student-user-name">
@@ -138,9 +159,14 @@ export default function StudentMain() {
                 {!showProfile && !showSettings && (
                     <>
                         <h2 className="umattend-student-title">Events</h2>
+
                         <div className="umattend-student-empty">
-                            <div className="umattend-student-calendar">📅</div>
+                            <div className="umattend-student-calendar">
+                                <FaCalendarAlt />
+                            </div>
+
                             <h3>No Upcoming Events</h3>
+
                             <p>
                                 There are no upcoming events at the moment.
                                 <br />
@@ -149,6 +175,8 @@ export default function StudentMain() {
                         </div>
                     </>
                 )}
+
+
             </section>
         </div>
     );
