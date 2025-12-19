@@ -60,7 +60,7 @@ export default function ViewProfile({ name, email, photo }) {
                         <div className="umattend-viewprofile-qrtext">
                             <strong>Your Digital Pass</strong>
                             <p>
-                                Use this QR code to check in and out of events.
+                                Use this QR code to check in and out of events. <br />
                                 Event organizers can scan it to verify your attendance.
                             </p>
                         </div>
