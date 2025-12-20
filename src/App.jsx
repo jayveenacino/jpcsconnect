@@ -4,20 +4,19 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import StudentMain from "./components/StudentMain";
 import AuthRedirect from "./components/AuthRedirect";
+import AdminDash from "./components/AdminDash";
 
 export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Entry point */}
                 <Route path="/" element={<AuthRedirect />} />
 
-                {/* Public */}
                 <Route path="/register" element={<Register />} />
 
-                {/* Protected */}
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/student" element={<StudentMain />} />
+                <Route path="/admin" element={<AdminDash />} />
             </Routes>
         </BrowserRouter>
     );
