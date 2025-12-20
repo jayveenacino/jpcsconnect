@@ -1,0 +1,463 @@
+.certificates-view {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.certificates-view h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 2rem;
+}
+
+.certificates-controls {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.control-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.event-select,
+.type-select {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.event-select:hover,
+.type-select:hover {
+    border-color: #a900f7;
+}
+
+.event-select:focus,
+.type-select:focus {
+    outline: none;
+    border-color: #a900f7;
+    box-shadow: 0 0 0 3px rgba(169, 0, 247, 0.1);
+}
+
+.certificates-summary {
+    margin-bottom: 2rem;
+}
+
+.summary-box {
+    background: linear-gradient(135deg, #a900f7 0%, #7c3aed 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    color: white;
+}
+
+.summary-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.summary-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.summary-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.summary-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.templates-section {
+    margin-bottom: 2rem;
+}
+
+.templates-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+}
+
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background: white;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.upload-container:hover {
+    border-color: #a900f7;
+    background: #faf5ff;
+}
+
+.upload-btn {
+    padding: 1rem 2rem;
+    background: #a900f7;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.upload-btn:hover {
+    background: #8e00d1;
+    transform: scale(1.02);
+}
+
+.uploaded-file {
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.template-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.template-card:hover {
+    border-color: #a900f7;
+    box-shadow: 0 4px 12px rgba(169, 0, 247, 0.15);
+    transform: translateY(-2px);
+}
+
+.template-preview-box {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.template-icon {
+    font-size: 4rem;
+}
+
+.template-info {
+    margin-bottom: 1rem;
+}
+
+.template-name {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.template-desc {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.template-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: #a900f7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.template-btn:hover {
+    background: #8e00d1;
+    transform: scale(1.02);
+}
+
+.preview-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.preview-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.close-preview-btn {
+    padding: 0.5rem 1rem;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.close-preview-btn:hover {
+    background: #dc2626;
+}
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.certificate-preview {
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1.414;
+    background: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.preview-border {
+    width: 100%;
+    height: 100%;
+    border: 8px double #a900f7;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-content {
+    text-align: center;
+    width: 100%;
+}
+
+.preview-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #a900f7;
+    margin-bottom: 1rem;
+}
+
+.preview-subtitle {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.preview-name {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 1.5rem 0;
+    text-decoration: underline;
+    text-decoration-color: #a900f7;
+}
+
+.preview-text {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.preview-event {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 1.5rem 0;
+}
+
+.preview-date {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+.preview-signature {
+    margin-top: 3rem;
+}
+
+.signature-line {
+    display: inline-block;
+    text-align: center;
+}
+
+.signature-line .line {
+    width: 200px;
+    height: 2px;
+    background: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.signature-line p {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.preview-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.generate-all-btn {
+    padding: 1rem 2rem;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.generate-all-btn:hover {
+    background: #059669;
+    transform: scale(1.02);
+}
+
+.attendees-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.attendees-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+}
+
+.attendees-table {
+    overflow-x: auto;
+}
+
+.attendees-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendees-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.attendees-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #4b5563;
+}
+
+.attendee-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.status-completed {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.generate-btn {
+    padding: 0.5rem 1rem;
+    background: #a900f7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.generate-btn:hover {
+    background: #8e00d1;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .certificates-view {
+        padding: 1rem;
+    }
+
+    .preview-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .preview-name {
+        font-size: 1.5rem;
+    }
+
+    .preview-event {
+        font-size: 1.25rem;
+    }
+
+    .templates-grid {
+        grid-template-columns: 1fr;
+    }
+}

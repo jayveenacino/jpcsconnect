@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaUniversity, FaGraduationCap } from "react-icons/fa";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "../css/profile.css";
 import Swal from "sweetalert2";
@@ -36,7 +38,7 @@ export default function Profile() {
         setStudentId(value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!studentId.trim()) {
             Swal.fire({
                 icon: "warning",
@@ -64,17 +66,65 @@ export default function Profile() {
             return;
         }
 
-        Swal.fire({
-            icon: "success",
-            title: "Profile Completed",
-            text: "Your profile information has been saved",
-            confirmButtonText: "Continue",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                localStorage.setItem("profileCompleted", "true");
-                navigate("/student");
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                // Save to Firebase for backup
+                await setDoc(doc(db, "users", user.uid), {
+                    displayName: fullName,
+                    email: email,
+                    studentId: studentId,
+                    department: department,
+                    program: program,
+                    photoURL: photo,
+                    createdAt: new Date().toISOString(),
+                    eventsAttended: 0
+                });
+
+                // Also save to localStorage with studentId as key
+                const existingUsers = JSON.parse(localStorage.getItem('jpcs_users') || '[]');
+                const userIndex = existingUsers.findIndex(u => u.id === user.uid);
+                const userData = {
+                    id: user.uid,
+                    displayName: fullName,
+                    email: email,
+                    studentId: studentId,
+                    fullName: fullName,
+                    department: department,
+                    program: program,
+                    photoURL: photo,
+                    createdAt: new Date().toISOString(),
+                    eventsAttended: 0,
+                    firebaseUid: user.uid
+                };
+
+                if (userIndex !== -1) {
+                    existingUsers[userIndex] = userData;
+                } else {
+                    existingUsers.push(userData);
+                }
+                localStorage.setItem('jpcs_users', JSON.stringify(existingUsers));
             }
-        });
+
+            Swal.fire({
+                icon: "success",
+                title: "Profile Completed",
+                text: "Your profile information has been saved",
+                confirmButtonText: "Continue",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.setItem("profileCompleted", "true");
+                    navigate("/student");
+                }
+            });
+        } catch (error) {
+            console.error("Error saving profile:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Failed to save profile. Please try again.",
+            });
+        }
     };
 
     return (
@@ -169,7 +219,16 @@ export default function Profile() {
                     Continue to Dashboard
                 </button>
 
-                <button className="logout-btn">Logout</button>
+                <button 
+                    className="logout-btn"
+                    onClick={async () => {
+                        await signOut(auth);
+                        localStorage.removeItem("profileCompleted");
+                        navigate("/register");
+                    }}
+                >
+                    Logout
+                </button>
 
                 <p className="terms">
                     By continuing, you agree to our{" "}

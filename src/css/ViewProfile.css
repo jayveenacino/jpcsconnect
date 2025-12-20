@@ -101,6 +101,7 @@
 .umattend-viewprofile-qrtext {
     font-size: 12px;
     margin-top: 60px;
+    margin-right: 20px;
 }
 
 .umattend-viewprofile-warning {
@@ -108,14 +109,13 @@
     padding: 6px;
     font-size: 11px;
     margin-top: 6px;
-    text-align: center;
 }
 
 
 /* INFO */
 
 .umattend-viewprofile-info {
-    margin-top: 26px;
+    margin-top: 16px;
 }
 
 .umattend-viewprofile-info-item {
@@ -153,31 +153,4 @@
 .umattend-viewprofile-info-icon {
     font-size: 14px;
     color: #0e0e0e;
-}
-
-@media (max-width: 600px) {
-    .umattend-viewprofile-qrbox {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        padding: 10px;
-        width: 100%;
-    }
-    .umattend-viewprofile-qrbox img {
-        display: block;
-        margin-bottom: 0;
-    }
-    .umattend-viewprofile-qrtext {
-        margin-top: 0;
-        padding-top: 0;
-        line-height: 1.2;
-        text-align: center;
-    }
-    .umattend-viewprofile-warning {
-        font-size: 9px;
-        line-height: 1.4;
-        padding: 0 12px;
-        text-align: center;
-    }
 }
