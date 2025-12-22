@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./admincss/AdminAttendance.css";
+import "./admincss/adminAttendance.css";
 import Swal from "sweetalert2";
 import { Html5QrcodeScanner } from "html5-qrcode";
 

@@ -6,6 +6,16 @@ import { useNavigate } from "react-router-dom";
 import ViewProfile from "./ViewProfile";
 import AccountSettings from "./AccountSettings";
 import { FaCalendarAlt } from "react-icons/fa";
+import Swal from "sweetalert2";
+import {
+    collection,
+    getDocs,
+    addDoc,
+    query,
+    where,
+    serverTimestamp
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function StudentMain() {
     const [open, setOpen] = useState(false);
@@ -13,6 +23,8 @@ export default function StudentMain() {
     const [name, setName] = useState("");
     const [showProfile, setShowProfile] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [events, setEvents] = useState([]);
+    const [loadingEvents, setLoadingEvents] = useState(true);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
 
@@ -38,10 +50,59 @@ export default function StudentMain() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const q = query(
+                    collection(db, "events"),
+                    where("status", "==", "upcoming")
+                );
+                const snap = await getDocs(q);
+                const list = snap.docs.map(d => ({
+                    id: d.id,
+                    ...d.data()
+                }));
+                setEvents(list);
+            } catch {
+                setEvents([]);
+            } finally {
+                setLoadingEvents(false);
+            }
+        };
+        fetchEvents();
+    }, []);
+
     const handleLogout = async () => {
         await signOut(auth);
         localStorage.removeItem("profileCompleted");
         navigate("/register", { replace: true });
+    };
+
+    const handleRegister = async (event) => {
+        const res = await Swal.fire({
+            title: "Register for this event?",
+            text: event.name,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            confirmButtonColor: "#a900f7"
+        });
+
+        if (!res.isConfirmed) return;
+
+        try {
+            await addDoc(collection(db, "registrations"), {
+                eventId: event.id,
+                studentId: auth.currentUser.uid,
+                studentName: name,
+                createdAt: serverTimestamp()
+            });
+
+            Swal.fire("Registered!", "You are successfully registered.", "success");
+        } catch (err) {
+            Swal.fire("Error", err.message, "error");
+        }
     };
 
     return (
@@ -141,17 +202,42 @@ export default function StudentMain() {
                 {!showProfile && !showSettings && (
                     <>
                         <h2 className="umattend-student-title">Events</h2>
-                        <div className="umattend-student-empty">
-                            <div className="umattend-student-calendar">
-                                <FaCalendarAlt />
+
+                        {loadingEvents ? (
+                            <p>Loading events...</p>
+                        ) : events.length === 0 ? (
+                            <div className="umattend-student-empty">
+                                <div className="umattend-student-calendar">
+                                    <FaCalendarAlt />
+                                </div>
+                                <h3>No Upcoming Events</h3>
+                                <p>Check back soon for new events!</p>
                             </div>
-                            <h3>No Upcoming Events</h3>
-                            <p>
-                                There are no upcoming events at the moment.
-                                <br />
-                                Check back soon for new events!
-                            </p>
-                        </div>
+                        ) : (
+                            <div className="student-event-list">
+                                {events.map(event => (
+                                    <div key={event.id} className="student-event-card">
+                                        <div className="student-event-card-header">
+                                            <h3>{event.name}</h3>
+                                        </div>
+                                        {event.description && (
+                                            <p className="student-event-description">{event.description}</p>
+                                        )}
+                                        <div className="student-event-details">
+                                            <div><strong>Date:</strong> {event.date}</div>
+                                            <div><strong>Time:</strong> {event.startTime}</div>
+                                            <div><strong>Location:</strong> {event.location}</div>
+                                        </div>
+                                        <button
+                                            className="register-btn"
+                                            onClick={() => handleRegister(event)}
+                                        >
+                                            Register Now
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </>
                 )}
             </section>

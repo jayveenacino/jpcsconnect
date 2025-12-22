@@ -5,6 +5,8 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import AdminAttendance from "./AdminAttendance";
 import StudentList from "./StudentList";
+import Event from "./CreateEvent"
+import Announcements from "./Announcements";
 
 
 export default function AdminDashboard() {
@@ -312,13 +314,13 @@ export default function AdminDashboard() {
                         }}
                     />
                 ) : activeTab === "events" ? (
-                    <AdminEvents />
+                    <Event />
                 ) : activeTab === "attendance" ? (
                     <AdminAttendance />
                 ) : activeTab === "students" ? (
                     <StudentList />
                 ) : activeTab === "announcements" ? (
-                    <AdminAnnouncements />
+                    <Announcements />
                 ) : (
                     <div className="admin-dashboard">
                         {loading ? (
