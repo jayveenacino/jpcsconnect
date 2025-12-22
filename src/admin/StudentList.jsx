@@ -3,7 +3,6 @@ import "./admincss/studentlist.css";
 import Swal from "sweetalert2";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import localDB from "../localDB";
 
 export default function AdminStudents() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -16,7 +15,7 @@ export default function AdminStudents() {
 
     const fetchStudents = async () => {
         try {
-            const snapshot = await getDocs(collection(db, "users"));
+            const snapshot = await getDocs(collection(db, "users"), { source: "server" });
 
             const usersList = snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -40,7 +39,7 @@ export default function AdminStudents() {
             student.email?.toLowerCase().includes(searchTerm.toLowerCase())
         );
     });
-    
+
 
     return (
         <div className="student-list">
@@ -140,7 +139,7 @@ export default function AdminStudents() {
                                             });
 
                                             if (value) {
-                                                await localDB.updateDoc("users", student.id, value);
+                                                await updateDoc(doc(db, "users", student.id), value);
                                                 fetchStudents();
                                             }
                                         }}
