@@ -4,6 +4,9 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../css/profile.css";
 import Swal from "sweetalert2";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+
 
 export default function Profile() {
     const [fullName, setFullName] = useState("");
@@ -36,45 +39,66 @@ export default function Profile() {
         setStudentId(value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!studentId.trim()) {
-            Swal.fire({
-                icon: "warning",
-                title: "Missing Student ID",
-                text: "Please enter your student number",
-            });
+            Swal.fire("Missing Student ID", "Please enter your student number", "warning");
             return;
         }
 
         if (!department) {
-            Swal.fire({
-                icon: "warning",
-                title: "Missing Department",
-                text: "Please select your department",
-            });
+            Swal.fire("Missing Department", "Please select your department", "warning");
             return;
         }
 
         if (!program) {
-            Swal.fire({
-                icon: "warning",
-                title: "Missing Program",
-                text: "Please select your program",
-            });
+            Swal.fire("Missing Program", "Please select your program", "warning");
             return;
         }
 
-        Swal.fire({
-            icon: "success",
-            title: "Profile Completed",
-            text: "Your profile information has been saved",
-            confirmButtonText: "Continue",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                localStorage.setItem("profileCompleted", "true");
-                navigate("/student");
-            }
-        });
+        const user = auth.currentUser;
+        if (!user) return;
+
+        try {
+            const userRef = doc(db, "users", user.uid);
+
+            await updateDoc(userRef, {
+                studentId,
+                department,
+                program,
+                profileCompleted: true,
+                updatedAt: new Date()
+            });
+
+            Swal.fire({
+                title: "Profile Completed",
+                html: "Dashboard is preparing for you in <b></b> seconds...",
+                icon: "success",
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const b = Swal.getHtmlContainer().querySelector("b");
+                    let seconds = 3;
+                    b.textContent = seconds;
+
+                    const interval = setInterval(() => {
+                        seconds--;
+                        if (b) b.textContent = seconds;
+                    }, 1000);
+
+                    Swal.willClose = () => clearInterval(interval);
+                },
+                didClose: () => {
+                    navigate("/student");
+                }
+            });
+
+        } catch (error) {
+            console.error(error);
+            Swal.fire("Error", "Failed to save profile", "error");
+        }
     };
 
     return (

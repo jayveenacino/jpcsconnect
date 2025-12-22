@@ -5,7 +5,6 @@ import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import gLogo from "../assets/Glogo.png";
 
-
 export default function Register() {
     const navigate = useNavigate();
 
@@ -15,30 +14,18 @@ export default function Register() {
                 navigate("/student", { replace: true });
             }
         });
-
         return () => unsubscribe();
     }, [navigate]);
 
     const handleGoogleLogin = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-
-            const isNewUser = result._tokenResponse?.isNewUser;
-
-            if (isNewUser) {
-                navigate("/profile", { replace: true });
-            } else {
-                navigate("/student", { replace: true });
-            }
-        } catch (error) {
-            console.log(error);
-        }
+        const result = await signInWithPopup(auth, provider);
+        const isNewUser = result._tokenResponse?.isNewUser;
+        navigate(isNewUser ? "/profile" : "/student", { replace: true });
     };
 
     useEffect(() => {
         const container = document.getElementById("bg-squares");
         if (!container) return;
-
         container.innerHTML = "";
         for (let i = 0; i < 20; i++) {
             const s = document.createElement("div");

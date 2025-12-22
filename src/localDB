@@ -1,0 +1,55 @@
+    import {
+        collection,
+        getDocs,
+        query,
+        where,
+        addDoc,
+        updateDoc,
+        doc
+    } from "firebase/firestore";
+    import { db } from "./firebase";
+
+    const localDB = {
+        getDocs: async (collectionName) => {
+            return await getDocs(collection(db, collectionName));
+        },
+
+        addDoc: async (collectionName, data) => {
+            return await addDoc(collection(db, collectionName), data);
+        },
+
+        updateDoc: async (collectionName, id, data) => {
+            const ref = doc(db, collectionName, id);
+            return await updateDoc(ref, data);
+        },
+
+        queryWhere: async (collectionName, field, operator, value) => {
+            const q = query(
+                collection(db, collectionName),
+                where(field, operator, value)
+            );
+            return await getDocs(q);
+        },
+
+        updateStudentAttendance: async (oldStudentId, formValues) => {
+            if (!oldStudentId || oldStudentId === formValues.studentId) return;
+
+            const snapshot = await localDB.queryWhere(
+                "attendance",
+                "studentId",
+                "==",
+                oldStudentId
+            );
+
+            const updates = snapshot.docs.map(docSnap => {
+                const ref = doc(db, "attendance", docSnap.id);
+                return updateDoc(ref, {
+                    studentId: formValues.studentId
+                });
+            });
+
+            await Promise.all(updates);
+        }
+    };
+
+    export default localDB;

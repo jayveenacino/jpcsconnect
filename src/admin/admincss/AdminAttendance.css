@@ -1,0 +1,374 @@
+.attendance-view {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.attendance-view h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 20px;
+}
+
+.attendance-controls {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.control-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.event-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.event-select:focus {
+    border-color: #a900f7;
+    box-shadow: 0 0 0 2px rgba(169, 0, 247, 0.12);
+}
+
+.scan-btn {
+    background: #a900f7;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.scan-btn:hover {
+    background: #9708da;
+}
+
+.scan-btn.active {
+    background: #dc2626;
+}
+
+.scan-btn.active:hover {
+    background: #b91c1c;
+}
+
+.scanner-panel {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.scanner-box {
+    aspect-ratio: 1;
+    background: #000000;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.scanner-overlay {
+    width: 70%;
+    height: 70%;
+    position: relative;
+    border: 2px solid #a900f7;
+    border-radius: 8px;
+}
+
+.scanner-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ffffff;
+}
+
+.scanner-corner.tl {
+    top: -2px;
+    left: -2px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.scanner-corner.tr {
+    top: -2px;
+    right: -2px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.scanner-corner.bl {
+    bottom: -2px;
+    left: -2px;
+    border-right: none;
+    border-top: none;
+}
+
+.scanner-corner.br {
+    bottom: -2px;
+    right: -2px;
+    border-left: none;
+    border-top: none;
+}
+
+.scanner-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #a900f7;
+    box-shadow: 0 0 10px #a900f7;
+    animation: scan 2s ease-in-out infinite;
+}
+
+@keyframes scan {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(calc(35vh - 4px));
+    }
+}
+
+.scanner-text {
+    position: absolute;
+    bottom: 20px;
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.scanner-instructions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.scanner-instructions h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.scanner-instructions p {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+.scanner-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    background: #f3f4f6;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #a900f7;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.attendance-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.summary-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.summary-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #a900f7;
+    margin-bottom: 4px;
+}
+
+.summary-label {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.attendance-table-container {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+}
+
+.export-btn {
+    background: #f3f4f6;
+    color: #374151;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.export-btn:hover {
+    background: #e5e7eb;
+}
+
+.attendance-table {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.attendance-table table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.attendance-table th,
+.attendance-table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.attendance-table th {
+    background: #f9fafb;
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.attendance-table td {
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #374151;
+}
+
+.student-name {
+    font-weight: 600;
+    color: #222;
+}
+
+.attendance-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.attendance-status-attended {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.attendance-status-registered {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.attendance-status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.attendance-status-checkedin {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+@media (max-width: 768px) {
+    .scanner-panel {
+        grid-template-columns: 1fr;
+    }
+    .attendance-summary {
+        grid-template-columns: 1fr;
+    }
+    .attendance-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .control-group {
+        width: 100%;
+    }
+    .scan-btn {
+        width: 100%;
+    }
+    .attendance-table {
+        font-size: 12px;
+    }
+    .attendance-table th,
+    .attendance-table td {
+        padding: 10px;
+    }
+}

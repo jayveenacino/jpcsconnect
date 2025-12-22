@@ -1,0 +1,118 @@
+.admin-login-container {
+    min-height: 100vh;
+    background: #f5f6fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
+}
+
+#admin-bg-squares {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.admin-float-square {
+    position: absolute;
+    bottom: -60px;
+    background: rgba(44, 62, 80, 0.08);
+    animation: adminFloat linear infinite;
+}
+
+@keyframes adminFloat {
+    from {
+        transform: translateY(0) rotate(0deg);
+    }
+    to {
+        transform: translateY(-120vh) rotate(360deg);
+    }
+}
+
+.admin-headerz {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    z-index: 1;
+}
+
+.admin-highlight {
+    color: #2c3e50;
+}
+
+.admin-subheader {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    z-index: 1;
+}
+
+.admin-card {
+    background: #ffffff;
+    padding: 30px;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    z-index: 1;
+}
+
+.admin-title {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.admin-input {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: #2c3e50;
+}
+
+.admin-login-btn {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #2c3e50;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.admin-login-btn:hover {
+    background: #1f2d3a;
+}
+
+.admin-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #888;
+}
+
+.admin-footer {
+    margin-top: 18px;
+    font-size: 13px;
+    z-index: 1;
+}
+
+.admin-footer a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 600;
+}

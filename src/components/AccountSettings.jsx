@@ -3,7 +3,7 @@ import "../css/AccountSettings.css";
 import { MdEmail, MdSecurity, MdOpenInNew, MdInfo } from "react-icons/md";
 import { FaUserCircle, FaBell } from "react-icons/fa";
 import sirJomar from "../assets/sirjomar.png";
-import presJayvee from "../assets/presJayvee.png";
+import presJayvee from "../assets/presJayvee.jpeg";
 import devThomas from "../assets/thomas.png";
 import devJae from "../assets/jae.png";
 

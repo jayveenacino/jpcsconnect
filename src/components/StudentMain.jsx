@@ -7,7 +7,6 @@ import ViewProfile from "./ViewProfile";
 import AccountSettings from "./AccountSettings";
 import { FaCalendarAlt } from "react-icons/fa";
 
-
 export default function StudentMain() {
     const [open, setOpen] = useState(false);
     const [photo, setPhoto] = useState("");
@@ -15,14 +14,12 @@ export default function StudentMain() {
     const [showProfile, setShowProfile] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const dropdownRef = useRef(null);
-
-
     const navigate = useNavigate();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                navigate("/register");
+                navigate("/register", { replace: true });
             } else {
                 setPhoto(user.photoURL || "");
                 setName(user.displayName || "");
@@ -37,19 +34,14 @@ export default function StudentMain() {
                 setOpen(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
 
     const handleLogout = async () => {
         await signOut(auth);
         localStorage.removeItem("profileCompleted");
-        navigate("/register");
+        navigate("/register", { replace: true });
     };
 
     return (
@@ -77,11 +69,7 @@ export default function StudentMain() {
                         onClick={() => setOpen(!open)}
                     >
                         {photo ? (
-                            <img
-                                src={photo}
-                                alt="Profile"
-                                className="umattend-student-avatar-img"
-                            />
+                            <img src={photo} alt="Profile" className="umattend-student-avatar-img" />
                         ) : (
                             <span>{name ? name.charAt(0).toUpperCase() : "U"}</span>
                         )}
@@ -92,18 +80,12 @@ export default function StudentMain() {
                             <div className="umattend-student-dropdown-header">
                                 <div className="umattend-student-avatar large">
                                     {photo ? (
-                                        <img
-                                            src={photo}
-                                            alt="Profile"
-                                            className="umattend-student-avatar-img"
-                                        />
+                                        <img src={photo} alt="Profile" className="umattend-student-avatar-img" />
                                     ) : (
                                         <span>{name ? name.charAt(0).toUpperCase() : "J"}</span>
                                     )}
                                 </div>
-                                <div className="umattend-student-user-name">
-                                    {name || "User"}
-                                </div>
+                                <div className="umattend-student-user-name">{name || "User"}</div>
                             </div>
 
                             <div
@@ -159,14 +141,11 @@ export default function StudentMain() {
                 {!showProfile && !showSettings && (
                     <>
                         <h2 className="umattend-student-title">Events</h2>
-
                         <div className="umattend-student-empty">
                             <div className="umattend-student-calendar">
                                 <FaCalendarAlt />
                             </div>
-
                             <h3>No Upcoming Events</h3>
-
                             <p>
                                 There are no upcoming events at the moment.
                                 <br />
@@ -175,8 +154,6 @@ export default function StudentMain() {
                         </div>
                     </>
                 )}
-
-
             </section>
         </div>
     );
