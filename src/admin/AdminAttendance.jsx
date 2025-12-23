@@ -32,7 +32,6 @@ export default function AdminAttendance() {
                 ...doc.data()
             }));
             setEvents(eventsList);
-
             if (eventsList.length > 0) {
                 if (!selectedEvent) setSelectedEvent(eventsList[0].id);
                 const daysArr = eventsList[0].days && eventsList[0].days.length > 0 ? eventsList[0].days : ["Day 1"];
@@ -111,47 +110,42 @@ export default function AdminAttendance() {
 
             const studentQuery = query(collection(db, "users"), where("studentId", "==", scannedCode.trim()));
             const studentSnap = await getDocs(studentQuery);
-            let studentData;
-            let isNewStudent = false;
 
-            if (studentSnap.empty || studentSnap.docs.length === 0) {
-                const newStudentData = {
-                    studentId: scannedCode.trim(),
-                    displayName: `Student ${scannedCode.trim()}`,
-                    fullName: `Unregistered Student ${scannedCode.trim()}`,
-                    email: "",
-                    department: "Unknown",
-                    program: "Unknown",
-                    photoURL: "",
-                    createdAt: new Date().toISOString(),
-                    eventsAttended: 0,
-                    firebaseUid: null,
-                    isRegistered: false
-                };
-                const docRef = await addDoc(collection(db, "users"), newStudentData);
-                studentData = { ...newStudentData, uid: docRef.id };
-                isNewStudent = true;
-            } else {
-                const docData = studentSnap.docs[0].data();
-                studentData = { ...docData, uid: studentSnap.docs[0].id };
+            if (studentSnap.empty) {
+                await Swal.fire({ icon: "error", title: "Not Registered", text: "Student not found in system", confirmButtonColor: "#a900f7" });
+                return;
+            }
+
+            const docData = studentSnap.docs[0].data();
+            const studentData = {
+                studentId: docData.studentId,
+                displayName: docData.displayName || docData.fullName || "Unknown",
+                fullName: docData.fullName || docData.displayName || "Unknown",
+            };
+
+            const regQuery = query(
+                collection(db, "registrations"),
+                where("eventId", "==", selectedEvent),
+                where("studentId", "==", studentData.studentId)
+            );
+            const regSnap = await getDocs(regQuery);
+
+            if (regSnap.empty) {
+                await Swal.fire({ icon: "error", title: "Not Registered", text: `${studentData.displayName} is not registered for this event`, confirmButtonColor: "#a900f7" });
+                return;
             }
 
             const existingAttendance = attendance.find(a => a.studentId === studentData.studentId && a.day === selectedDay);
 
             if (existingAttendance) {
-                await Swal.fire({
-                    icon: "warning",
-                    title: "Already Checked In",
-                    text: `${studentData.fullName || studentData.displayName} has already been checked in for this day.`,
-                    confirmButtonColor: "#a900f7"
-                });
+                await Swal.fire({ icon: "warning", title: "Already Checked In", text: `${studentData.displayName} has already checked in for this day.`, confirmButtonColor: "#a900f7" });
                 return;
             }
 
             const event = events.find(e => e.id === selectedEvent);
             await addDoc(collection(db, "attendance"), {
                 studentId: studentData.studentId,
-                studentName: studentData.fullName || studentData.displayName,
+                studentName: studentData.displayName,
                 eventId: selectedEvent,
                 eventName: event?.name || "Unknown Event",
                 status: "attended",
@@ -160,16 +154,7 @@ export default function AdminAttendance() {
             });
 
             await fetchAttendance();
-
-            await Swal.fire({
-                icon: "success",
-                title: "Check-in Successful!",
-                text: isNewStudent
-                    ? `New student ${scannedCode.trim()} checked in successfully`
-                    : `${studentData.fullName || studentData.displayName} checked in successfully`,
-                timer: 1500,
-                showConfirmButton: false
-            });
+            await Swal.fire({ icon: "success", title: "Check-in Successful!", text: `${studentData.displayName} checked in successfully`, timer: 1500, showConfirmButton: false });
 
         } catch (error) {
             console.error("Error processing QR scan:", error);
@@ -214,19 +199,15 @@ export default function AdminAttendance() {
     return (
         <div className="attendance-view">
             <h2>Attendance Tracking</h2>
-
             <div className="attendance-controls">
                 <div className="control-group">
                     <label>Select Event</label>
                     <select value={selectedEvent} onChange={(e) => setSelectedEvent(e.target.value)} className="event-select">
                         {events.map((event) => (
-                            <option key={event.id} value={event.id}>
-                                {event.name} - {event.date}
-                            </option>
+                            <option key={event.id} value={event.id}>{event.name} - {event.date}</option>
                         ))}
                     </select>
                 </div>
-
                 {events.find(e => e.id === selectedEvent)?.days?.length > 0 && (
                     <div className="day-buttons">
                         {events.find(e => e.id === selectedEvent).days.map((day, index) => (
@@ -236,12 +217,10 @@ export default function AdminAttendance() {
                         ))}
                     </div>
                 )}
-
                 <button className={`scan-btn ${scannerActive ? "active" : ""}`} onClick={handleScanToggle}>
                     {scannerActive ? "Stop Scanner" : "Start Scanner"}
                 </button>
             </div>
-
             {scannerActive && (
                 <div className="scanner-panel">
                     <div className="scanner-box" ref={scannerRef}>
@@ -249,22 +228,17 @@ export default function AdminAttendance() {
                     </div>
                 </div>
             )}
-
             <div className="attendance-summary">
                 <div className="summary-card">
                     <div className="summary-value">{attendance.length}</div>
                     <div className="summary-label">Total Attendees</div>
                 </div>
             </div>
-
             <div className="attendance-table-container">
                 <div className="table-header">
                     <h3>Attendance Records</h3>
-                    <button className="export-btn" onClick={handleExportCSV} disabled={attendance.length === 0}>
-                        Export CSV
-                    </button>
+                    <button className="export-btn" onClick={handleExportCSV} disabled={attendance.length === 0}>Export CSV</button>
                 </div>
-
                 <div className="attendance-table">
                     <table>
                         <thead>
@@ -277,27 +251,17 @@ export default function AdminAttendance() {
                         </thead>
                         <tbody>
                             {attendance.length === 0 ? (
-                                <tr>
-                                    <td colSpan="4" style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
-                                        No attendance records
-                                    </td>
-                                </tr>
+                                <tr><td colSpan="4" style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>No attendance records</td></tr>
                             ) : (
                                 attendance.map((record) => {
                                     const statusLabel = record.status === "registered" ? "Registered" : "Attended";
                                     const statusClass = record.status === "registered" ? "attendance-status-registered" : "attendance-status-attended";
                                     return (
                                         <tr key={record.id}>
-                                            <td style={{ maxWidth: "120px", wordBreak: "break-word", fontWeight: "600" }}>
-                                                {record.studentId || "N/A"}
-                                            </td>
-                                            <td className="student-name" style={{ maxWidth: "200px", wordBreak: "break-word" }}>
-                                                {record.studentName || "Unknown"}
-                                            </td>
+                                            <td style={{ maxWidth: "120px", wordBreak: "break-word", fontWeight: "600" }}>{record.studentId || "N/A"}</td>
+                                            <td className="student-name" style={{ maxWidth: "200px", wordBreak: "break-word" }}>{record.studentName || "Unknown"}</td>
                                             <td>{record.day || "N/A"}</td>
-                                            <td>
-                                                <span className={`attendance-badge ${statusClass}`}>{statusLabel}</span>
-                                            </td>
+                                            <td><span className={`attendance-badge ${statusClass}`}>{statusLabel}</span></td>
                                         </tr>
                                     );
                                 })
