@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./admincss/event.css";
 import Swal from "sweetalert2";
-import { QRCodeSVG } from "qrcode.react";
 import {
     collection,
     addDoc,
@@ -9,7 +8,9 @@ import {
     updateDoc,
     deleteDoc,
     doc,
-    serverTimestamp
+    serverTimestamp,
+    query,
+    where
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -19,8 +20,10 @@ export default function CreateEvent() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [editingEvent, setEditingEvent] = useState(null);
-    const [showQRModal, setShowQRModal] = useState(false);
-    const [selectedEventForQR, setSelectedEventForQR] = useState(null);
+
+    const [showAttendeesModal, setShowAttendeesModal] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [attendees, setAttendees] = useState([]);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -37,10 +40,29 @@ export default function CreateEvent() {
     const fetchEvents = async () => {
         try {
             const snapshot = await getDocs(collection(db, "events"));
-            const list = snapshot.docs.map(d => ({
-                id: d.id,
-                ...d.data()
-            }));
+            const list = [];
+
+            for (const d of snapshot.docs) {
+                const regQuery = query(
+                    collection(db, "registrations"),
+                    where("eventId", "==", d.id)
+                );
+                const regSnap = await getDocs(regQuery);
+
+                list.push({
+                    id: d.id,
+                    ...d.data(),
+                    attendees: regSnap.size
+                });
+            }
+
+            // Sort: Upcoming first, then completed
+            list.sort((a, b) => {
+                if (a.status === "completed" && b.status !== "completed") return 1;
+                if (a.status !== "completed" && b.status === "completed") return -1;
+                return b.createdAt?.seconds - a.createdAt?.seconds; // Newest first
+            });
+
             setEvents(list);
         } catch {
             setEvents([]);
@@ -65,12 +87,12 @@ export default function CreateEvent() {
                 await addDoc(collection(db, "events"), {
                     ...formData,
                     status: "upcoming",
-                    attendees: 0,
                     createdAt: serverTimestamp()
                 });
                 Swal.fire("Created!", "Event created successfully", "success");
             }
 
+            // Reset form and editing state
             setFormData({
                 name: "",
                 description: "",
@@ -78,7 +100,6 @@ export default function CreateEvent() {
                 startTime: "",
                 location: ""
             });
-
             setEditingEvent(null);
             setShowForm(false);
             fetchEvents();
@@ -101,7 +122,7 @@ export default function CreateEvent() {
         setShowForm(true);
     };
 
-    const handleCancelEdit = () => {
+    const handleCancelForm = () => {
         setEditingEvent(null);
         setFormData({
             name: "",
@@ -129,9 +150,28 @@ export default function CreateEvent() {
         }
     };
 
-    const handleCloseQRModal = () => {
-        setShowQRModal(false);
-        setSelectedEventForQR(null);
+    const openAttendeesModal = async (event) => {
+        setSelectedEvent(event);
+
+        const q = query(
+            collection(db, "registrations"),
+            where("eventId", "==", event.id)
+        );
+        const snap = await getDocs(q);
+
+        const list = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+        }));
+
+        setAttendees(list);
+        setShowAttendeesModal(true);
+    };
+
+    const closeAttendeesModal = () => {
+        setShowAttendeesModal(false);
+        setSelectedEvent(null);
+        setAttendees([]);
     };
 
     const getStatusBadge = (status) => {
@@ -147,7 +187,16 @@ export default function CreateEvent() {
         <div className="event-management">
             <div className="event-header">
                 <h2>Event Management</h2>
-                <button className="create-event-btn" onClick={() => setShowForm(!showForm)}>
+                <button
+                    className="create-event-btn"
+                    onClick={() => {
+                        if (showForm) {
+                            handleCancelForm();
+                        } else {
+                            setShowForm(true);
+                        }
+                    }}
+                >
                     {showForm ? "Cancel" : "+ Create Event"}
                 </button>
             </div>
@@ -155,88 +204,57 @@ export default function CreateEvent() {
             {showForm && (
                 <div className="event-form-card">
                     <h3>{editingEvent ? "Edit Event" : "Create New Event"}</h3>
-
                     <form onSubmit={handleSubmit}>
-                        <div className="form-row">
-                            <div className="form-field">
-                                <label>Event Name *</label>
-                                <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
-                            </div>
-                        </div>
+                        <input name="name" value={formData.name} placeholder="Event Title" onChange={handleInputChange} required />
+                        <input name="location" value={formData.location} placeholder="Event Location" onChange={handleInputChange} required />
+                        <textarea name="description" value={formData.description} placeholder="Event Description" onChange={handleInputChange} />
+                        <input type="date" name="date" value={formData.date} onChange={handleInputChange} required />
+                        <input type="time" name="startTime" value={formData.startTime} onChange={handleInputChange} required />
 
-                        <div className="form-row">
-                            <div className="form-field">
-                                <label>Description</label>
-                                <textarea name="description" rows="3" value={formData.description} onChange={handleInputChange} />
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-field">
-                                <label>Date *</label>
-                                <input type="date" name="date" value={formData.date} onChange={handleInputChange} required />
-                            </div>
-
-                            <div className="form-field">
-                                <label>Start Time *</label>
-                                <input type="time" name="startTime" value={formData.startTime} onChange={handleInputChange} required />
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-field">
-                                <label>Location *</label>
-                                <input type="text" name="location" value={formData.location} onChange={handleInputChange} required />
-                            </div>
-                        </div>
-
-                        <div className="form-actions">
-                            <button type="submit" className="submit-btn" disabled={submitting}>
-                                {submitting ? (editingEvent ? "Updating..." : "Creating...") : (editingEvent ? "Update Event" : "Create Event")}
-                            </button>
-
-                            {editingEvent && (
-                                <button type="button" className="event-btn-secondary" style={{ marginLeft: "1rem" }} onClick={handleCancelEdit}>
-                                    Cancel
-                                </button>
-                            )}
-                        </div>
+                        <button type="submit">{editingEvent ? "Update" : "Create"}</button>
                     </form>
                 </div>
             )}
 
             <div className="events-list">
                 {loading ? (
-                    <div style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>Loading events...</div>
-                ) : events.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>No events yet</div>
+                    <p>Loading events...</p>
                 ) : (
-                    events.map((event) => {
+                    events.map(event => {
                         const badge = getStatusBadge(event.status);
 
                         return (
                             <div key={event.id} className="event-card">
-                                <div className="event-card-header">
-                                    <h3>{event.name}</h3>
-                                    <span className={`status-badge ${badge.className}`}>{badge.label}</span>
-                                </div>
-
-                                <div className="event-details">
-                                    <div className="event-detail-item"><span className="detail-label">Date:</span><span>{event.date}</span></div>
-                                    <div className="event-detail-item"><span className="detail-label">Time:</span><span>{event.startTime}</span></div>
-                                    <div className="event-detail-item"><span className="detail-label">Location:</span><span>{event.location}</span></div>
-                                    <div className="event-detail-item"><span className="detail-label">Attendees:</span><span>{event.attendees || 0}</span></div>
-                                </div>
+                                <h3>{event.name}</h3>
+                                <span className={`status-badge ${badge.className}`}>{badge.label}</span>
+                                <p><strong>Attendees:</strong> {event.attendees}</p>
 
                                 <div className="event-actions">
-                                    <button className="event-btn-secondary" onClick={() => { setSelectedEventForQR(event); setShowQRModal(true); }}>
-                                        View QR
+                                    <button className="event-btn-secondary" onClick={() => openAttendeesModal(event)}>
+                                        View Attendees
                                     </button>
-
                                     <button className="event-btn-secondary" onClick={() => handleEdit(event)}>
                                         Edit
                                     </button>
+                                    <button className="event-btn-secondary"
+                                        onClick={async () => {
+                                            const res = await Swal.fire({
+                                                title: "Mark event as done?",
+                                                text: "This will prevent further registrations.",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#28a745",
+                                                confirmButtonText: "Yes, done"
+                                            });
 
+                                            if (res.isConfirmed) {
+                                                await updateDoc(doc(db, "events", event.id), { status: "completed" });
+                                                Swal.fire("Done!", "Event marked as completed.", "success");
+                                                fetchEvents();
+                                            }
+                                        }}>
+                                        Mark Done
+                                    </button>
                                     <button className="event-btn-danger" onClick={() => handleDelete(event.id)}>
                                         Delete
                                     </button>
@@ -247,23 +265,37 @@ export default function CreateEvent() {
                 )}
             </div>
 
-            {showQRModal && selectedEventForQR && (
-                <div className="modal-overlay" onClick={handleCloseQRModal}>
-                    <div className="modal-content qr-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3>Event QR Code</h3>
-                            <button className="modal-close" onClick={handleCloseQRModal}>&times;</button>
-                        </div>
-                        <div className="modal-body" style={{ textAlign: "center", padding: "2rem" }}>
-                            <h4 style={{ marginBottom: "1rem", color: "#333" }}>{selectedEventForQR.name}</h4>
-                            <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem", padding: "1rem", backgroundColor: "#fff", borderRadius: "8px" }}>
-                                <QRCodeSVG value={selectedEventForQR.id} size={256} level="H" includeMargin />
-                            </div>
-                            <p style={{ fontSize: "0.9rem", color: "#666" }}>Scan this QR code to mark attendance for this event</p>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="event-btn-secondary" onClick={handleCloseQRModal}>Close</button>
-                        </div>
+            {showAttendeesModal && selectedEvent && (
+                <div className="modal-overlay" onClick={closeAttendeesModal}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <h3>{selectedEvent.name} – Attendees</h3>
+
+                        {attendees.length === 0 ? (
+                            <p>No students registered</p>
+                        ) : (
+                            <table className="attendees-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Student Name</th>
+                                        <th>Student ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {attendees.map((a, i) => (
+                                        <tr key={a.id}>
+                                            <td>{i + 1}</td>
+                                            <td>{a.studentName}</td>
+                                            <td>{a.studentId}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+
+                        <button className="event-btn-secondary" onClick={closeAttendeesModal}>
+                            Close
+                        </button>
                     </div>
                 </div>
             )}

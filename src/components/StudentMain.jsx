@@ -56,7 +56,7 @@ export default function StudentMain() {
             try {
                 const eventQuery = query(
                     collection(db, "events"),
-                    where("status", "==", "upcoming")
+                    where("status", "in", ["upcoming", "ongoing"])
                 );
                 const eventSnap = await getDocs(eventQuery);
                 const eventList = eventSnap.docs.map(d => ({
@@ -244,7 +244,17 @@ export default function StudentMain() {
 
                                             <div className="student-event-details">
                                                 <div><strong>Date:</strong> {event.date}</div>
-                                                <div><strong>Time:</strong> {event.startTime}</div>
+                                                <div>
+                                                    <strong>Time:</strong>{" "}
+                                                    {(() => {
+                                                        if (!event.startTime) return "";
+                                                        const [hour, minute] = event.startTime.split(":").map(Number);
+                                                        const ampm = hour >= 12 ? "PM" : "AM";
+                                                        const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+                                                        return `${hour12}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                                                    })()}
+                                                </div>
+
                                                 <div><strong>Location:</strong> {event.location}</div>
                                             </div>
 
