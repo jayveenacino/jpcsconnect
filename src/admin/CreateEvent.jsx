@@ -56,11 +56,10 @@ export default function CreateEvent() {
                 });
             }
 
-            // Sort: Upcoming first, then completed
             list.sort((a, b) => {
                 if (a.status === "completed" && b.status !== "completed") return 1;
                 if (a.status !== "completed" && b.status === "completed") return -1;
-                return b.createdAt?.seconds - a.createdAt?.seconds; // Newest first
+                return b.createdAt?.seconds - a.createdAt?.seconds;
             });
 
             setEvents(list);
@@ -92,7 +91,6 @@ export default function CreateEvent() {
                 Swal.fire("Created!", "Event created successfully", "success");
             }
 
-            // Reset form and editing state
             setFormData({
                 name: "",
                 description: "",
@@ -211,7 +209,7 @@ export default function CreateEvent() {
                         <input type="date" name="date" value={formData.date} onChange={handleInputChange} required />
                         <input type="time" name="startTime" value={formData.startTime} onChange={handleInputChange} required />
 
-                        <button type="submit">{editingEvent ? "Update" : "Create"}</button>
+                        <button type="submit" disabled={submitting}>{editingEvent ? "Update" : "Create"}</button>
                     </form>
                 </div>
             )}
