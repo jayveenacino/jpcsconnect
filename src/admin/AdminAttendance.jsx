@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import "./admincss/AdminAttendance.css";
 import Swal from "sweetalert2";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function AdminAttendance() {
     const [selectedEvent, setSelectedEvent] = useState("");
@@ -24,15 +26,14 @@ export default function AdminAttendance() {
 
     const fetchEvents = async () => {
         try {
-            const snapshot = await localDB.getDocs("events");
+            const eventsCol = collection(db, "events"); 
+            const snapshot = await getDocs(eventsCol);
             const eventsList = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
             setEvents(eventsList);
-            if (eventsList.length > 0) {
-                setSelectedEvent(eventsList[0].id);
-            }
+            if (eventsList.length > 0) setSelectedEvent(eventsList[0].id);
         } catch (error) {
             console.error("Error fetching events:", error);
         } finally {
@@ -262,6 +263,8 @@ export default function AdminAttendance() {
     const getStatusBadge = (status) => {
         return { label: "Attended", className: "attendance-status-completed" };
     };
+
+
 
     return (
         <div className="attendance-view">

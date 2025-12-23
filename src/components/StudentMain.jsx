@@ -25,6 +25,7 @@ export default function StudentMain() {
     const [showSettings, setShowSettings] = useState(false);
     const [events, setEvents] = useState([]);
     const [loadingEvents, setLoadingEvents] = useState(true);
+    const [registeredEvents, setRegisteredEvents] = useState([]);
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
 
@@ -51,25 +52,35 @@ export default function StudentMain() {
     }, []);
 
     useEffect(() => {
-        const fetchEvents = async () => {
+        const fetchData = async () => {
             try {
-                const q = query(
+                const eventQuery = query(
                     collection(db, "events"),
                     where("status", "==", "upcoming")
                 );
-                const snap = await getDocs(q);
-                const list = snap.docs.map(d => ({
+                const eventSnap = await getDocs(eventQuery);
+                const eventList = eventSnap.docs.map(d => ({
                     id: d.id,
                     ...d.data()
                 }));
-                setEvents(list);
+                setEvents(eventList);
+
+                const regQuery = query(
+                    collection(db, "registrations"),
+                    where("studentId", "==", auth.currentUser.uid)
+                );
+                const regSnap = await getDocs(regQuery);
+                const regEventIds = regSnap.docs.map(d => d.data().eventId);
+                setRegisteredEvents(regEventIds);
+
             } catch {
                 setEvents([]);
             } finally {
                 setLoadingEvents(false);
             }
         };
-        fetchEvents();
+
+        fetchData();
     }, []);
 
     const handleLogout = async () => {
@@ -86,7 +97,7 @@ export default function StudentMain() {
             showCancelButton: true,
             confirmButtonText: "Yes",
             cancelButtonText: "No",
-            confirmButtonColor: "#a900f7"
+            confirmButtonColor: "#28a745"
         });
 
         if (!res.isConfirmed) return;
@@ -94,10 +105,13 @@ export default function StudentMain() {
         try {
             await addDoc(collection(db, "registrations"), {
                 eventId: event.id,
+                eventName: event.name,
                 studentId: auth.currentUser.uid,
                 studentName: name,
                 createdAt: serverTimestamp()
             });
+
+            setRegisteredEvents(prev => [...prev, event.id]);
 
             Swal.fire("Registered!", "You are successfully registered.", "success");
         } catch (err) {
@@ -215,27 +229,35 @@ export default function StudentMain() {
                             </div>
                         ) : (
                             <div className="student-event-list">
-                                {events.map(event => (
-                                    <div key={event.id} className="student-event-card">
-                                        <div className="student-event-card-header">
-                                            <h3>{event.name}</h3>
+                                {events.map(event => {
+                                    const isRegistered = registeredEvents.includes(event.id);
+
+                                    return (
+                                        <div key={event.id} className="student-event-card">
+                                            <div className="student-event-card-header">
+                                                <h3>{event.name}</h3>
+                                            </div>
+
+                                            {event.description && (
+                                                <p className="student-event-description">{event.description}</p>
+                                            )}
+
+                                            <div className="student-event-details">
+                                                <div><strong>Date:</strong> {event.date}</div>
+                                                <div><strong>Time:</strong> {event.startTime}</div>
+                                                <div><strong>Location:</strong> {event.location}</div>
+                                            </div>
+
+                                            <button
+                                                className={`register-btn ${isRegistered ? "registered" : ""}`}
+                                                disabled={isRegistered}
+                                                onClick={() => handleRegister(event)}
+                                            >
+                                                {isRegistered ? "✅ REGISTERED" : "Register Now"}
+                                            </button>
                                         </div>
-                                        {event.description && (
-                                            <p className="student-event-description">{event.description}</p>
-                                        )}
-                                        <div className="student-event-details">
-                                            <div><strong>Date:</strong> {event.date}</div>
-                                            <div><strong>Time:</strong> {event.startTime}</div>
-                                            <div><strong>Location:</strong> {event.location}</div>
-                                        </div>
-                                        <button
-                                            className="register-btn"
-                                            onClick={() => handleRegister(event)}
-                                        >
-                                            Register Now
-                                        </button>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </>

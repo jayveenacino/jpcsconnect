@@ -278,3 +278,9 @@
         grid-template-columns: 1fr;
     }
 }
+
+.register-btn.registered {
+    background-color: #28a745;
+    color: #ffffff;
+    cursor: not-allowed;
+}
