@@ -119,6 +119,33 @@ export default function StudentMain() {
         }
     };
 
+    const [verse, setVerse] = useState(null);
+    const [verseLoading, setVerseLoading] = useState(true);
+
+
+    useEffect(() => {
+        const fetchDailyVerse = async () => {
+            try {
+                const res = await fetch(
+                    "https://beta.ourmanna.com/api/v1/get/?format=json&order=daily"
+                );
+                const data = await res.json();
+
+                setVerse({
+                    text: data.verse.details.text,
+                    reference: data.verse.details.reference,
+                });
+            } catch (error) {
+                console.error("Bible verse error:", error);
+            } finally {
+                setVerseLoading(false);
+            }
+        };
+
+        fetchDailyVerse();
+    }, []);
+
+
     return (
         <div className="umattend-student-page">
             <header className="umattend-student-navbar">
@@ -217,6 +244,22 @@ export default function StudentMain() {
                     <>
                         <h2 className="umattend-student-title">Events</h2>
 
+                        <div className="daily-bible-verse">
+                            <h3>📖 Daily Bible Verse</h3>
+
+                            {verseLoading ? (
+                                <p>Loading today’s verse...</p>
+                            ) : verse ? (
+                                <>
+                                    <p className="verse-text">“{verse.text}”</p>
+                                    <span className="verse-ref">{verse.reference}</span>
+                                </>
+                            ) : (
+                                <p>Verse not available today.</p>
+                            )}
+                        </div>
+
+
                         {loadingEvents ? (
                             <p>Loading events...</p>
                         ) : events.length === 0 ? (
@@ -268,6 +311,8 @@ export default function StudentMain() {
                                         </div>
                                     );
                                 })}
+
+
                             </div>
                         )}
                     </>
